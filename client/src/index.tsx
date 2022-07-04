@@ -5,18 +5,12 @@ import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
 import {  Router } from 'react-router-dom';
 import { createBrowserHistory } from "history";
-import { StoreProvider } from './app/context/StoreContext';
+import { Provider } from 'react-redux';
+import { store } from './app/store/configureStore';
+import { fetchProductsAsync } from './features/catalog/catalogSlice';
+
 
 export const history = createBrowserHistory();
-
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <Router history={history}>
-//       <App />
-//     </Router>
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -24,9 +18,9 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
       <Router history={history}>
-        <StoreProvider>
-          <App />
-        </StoreProvider>  
+          <Provider store={store}>
+            <App />
+          </Provider> 
       </Router>
     </React.StrictMode>
 );
