@@ -19,6 +19,8 @@ namespace API.Entities.OrderAggregate
         public long DeliveryFee { get; set; }
 
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+
+        public string PaymentIntentId { get; set; }
         
         //nje metod qe na kthen totalin e shumes, bashkangjitur me pagesen e postes
         public long GetTotal()
