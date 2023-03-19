@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities.OrderAggregate
 {
@@ -9,9 +10,10 @@ namespace API.Entities.OrderAggregate
 
         public string BuyerId { get; set; }
 
+        [Required]
         public ShippingAddress ShippingAddress { get; set; }
 
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow; //changed it beacuse postgreeSQL does not store as datetime.now
 
         public List<OrderItem> OrderItems { get; set; }
 
