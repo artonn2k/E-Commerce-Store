@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Paper } from '@mui/material';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import agent from '../../app/api/agent';
 import { useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 const theme = createTheme();
 
 export default function Register() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { register, handleSubmit,setError, formState: { isSubmitting, errors, isValid } } = useForm({
     mode: 'all'
   });
@@ -50,7 +50,7 @@ export default function Register() {
             agent.Account.register(data)
             .then(() => {
               toast.success('Registration succesful - you can log in');
-              history.push('/login');
+              navigate('/login');
             })
             .catch(error => handleApiErrors(error)))
           }

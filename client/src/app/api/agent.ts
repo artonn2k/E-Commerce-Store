@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { history } from "../..";
 import { PaginatedResponse } from "../models/pagination";
+import { router } from "../router/Routes";
 import { store } from "../store/configureStore";
 
 
@@ -36,7 +36,7 @@ axios.interceptors.response.use(async response => {
     }
     return response
 }, (error: AxiosError) => {
-    const { data, status } = error.response as any; 
+    const { data, status } = error.response as AxiosResponse; 
     switch (status) {
         case 400:
             if(data.errors) {
@@ -54,10 +54,7 @@ axios.interceptors.response.use(async response => {
             toast.error(data.title);
             break;
         case 500:
-            history.push({
-                pathname: '/server-error',
-                state: {error: data}
-            });
+            router.navigate('/server-error', {state: {error: data}})
             break;
         default:
             break;
