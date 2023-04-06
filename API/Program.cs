@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container
@@ -76,6 +78,9 @@ if (builder.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 }
 
+app.UseDefaultFiles(); // its going to look for default directory wwwroot/index.html
+app.UseStaticFiles(); // using static files so it can serve the content above /index.html
+
 app.UseCors(opt =>
 {
     opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
@@ -86,7 +91,8 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-
+app.MapFallbackToController("Index", "Fallback"); /*to tell our API to do something 
+when he encounter with routes he doesnt know*/
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
