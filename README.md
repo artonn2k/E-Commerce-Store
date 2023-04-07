@@ -22,7 +22,7 @@ instructions from Udemy course for .NET and ReactTS.
 
 ## Other libraries
 - Stripe
--EF(Entity Framework)
+- EF(Entity Framework)
 ...many more libraries.
 
 **Stripe** is a popular payment processing platform that allows customers to make payments using credit cards, debit cards, and other payment methods. 
