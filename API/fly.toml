@@ -1,0 +1,38 @@
+# fly.toml file generated for onlinestore on 2023-04-07T01:03:11+02:00
+
+app = "onlinestore"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "otp"
+processes = []
+
+[build]
+  image = "artonn2k/ecommerce:latest"
+
+[env]
+ASPNETCORE_URLS="http://+:8080"
+StripeSettings__PublishableKey="pk_test_51McuEUGtKVkAsLQTbPdGhkyGqi8qBQPbACaeO03yLRqSCdLduDPVrhBUZH5s6B25jeNKF3rAsCDtKvn0AFHL4vej00ry5pnv1m"
+
+
+[experimental]
+allowed_public_ports = []
+auto_rollback = true
+
+[[services]]
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
