@@ -18,6 +18,8 @@ namespace API.Controllers
             _context = context;
         }
 
+
+
         [HttpGet]
         public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
         {
@@ -36,6 +38,8 @@ namespace API.Controllers
             //filter for ordering -> price low to high , high to low, alphabetical order, searching product
         }
 
+//===========================================================================================================================================================================================================
+
         //this one is going to get from the root ex. api/produktet/3 - 3shi means ID produktit
         [HttpGet("{id}", Name = "GetProduct")]
         public async Task<ActionResult<Product>> GetProduct(int id)
@@ -47,6 +51,8 @@ namespace API.Controllers
             return product;
         }
 
+//===========================================================================================================================================================================================================
+
         [HttpGet("filters")]
         public async Task<IActionResult> GetFilters()
         {
@@ -55,6 +61,8 @@ namespace API.Controllers
 
             return Ok(new { brands, types });
         }
+
+//===========================================================================================================================================================================================================
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -82,6 +90,8 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails { Title = "Error while creating new product" });
         }
+
+//===========================================================================================================================================================================================================
 
         [Authorize(Roles = "Admin")]
         [HttpPut]
@@ -114,6 +124,8 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails { Title = "Problem updating the product" });
         }
+
+//===========================================================================================================================================================================================================
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
