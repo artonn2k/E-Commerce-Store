@@ -6,7 +6,7 @@ import { User } from "../../app/models/user";
 import { router } from "../../app/router/Routes";
 import { setBasket } from "../basket/basketSlice";
 
-interface AccountState{
+interface AccountState {
     user: User | null;
 }
 
@@ -17,35 +17,35 @@ const initialState: AccountState = {
 export const signInUser = createAsyncThunk<User, FieldValues>(
     'account/signInUser',
     async (data, thunkAPI) => {
-        try{
+        try {
             const userDto = await agent.Account.login(data);
-            const {basket, ...user} = userDto;
-            if(basket) thunkAPI.dispatch(setBasket(basket)); ///=.....
+            const { basket, ...user } = userDto;
+            if (basket) thunkAPI.dispatch(setBasket(basket)); ///=.....
             localStorage.setItem('user', JSON.stringify(user)); //we store the token in local storage
             return user;
-        }catch(error: any){
-            return thunkAPI.rejectWithValue({error: error.data});
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue({ error: error.data });
         }
     }
-) 
+)
 /*1.when we hit this method beacuse we have a token in localstorage*/
-export const fetchCurrentUser = createAsyncThunk<User>( 
+export const fetchCurrentUser = createAsyncThunk<User>(
     'account/fetchCurrentUser',
     async (_, thunkAPI) => {
         thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!))); /*2. then were gona set that token*/
-        try{
+        try {
             const userDto = await agent.Account.currentUser();
-            const {basket, ...user} = userDto;
-            if(basket) thunkAPI.dispatch(setBasket(basket));  /*3.getting the current user //we do not need the data when whe fetch the current user*/
+            const { basket, ...user } = userDto;
+            if (basket) thunkAPI.dispatch(setBasket(basket));  /*3.getting the current user //we do not need the data when whe fetch the current user*/
             localStorage.setItem('user', JSON.stringify(user));  //overriding the user in the local storage, replace it with the updated token
             return user;
-        }catch(error: any){
-            return thunkAPI.rejectWithValue({error: error.data});
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue({ error: error.data });
         }
     },
     {
         condition: () => {
-            if(!localStorage.getItem('user')) return false;
+            if (!localStorage.getItem('user')) return false;
         }
     }
 )
@@ -60,7 +60,9 @@ export const accountSlice = createSlice({
             router.navigate('/');
         },
         setUser: (state, action) => {
-            state.user = action.payload;
+            let claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+            let roles = claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+            state.user = { ...action.payload, roles: typeof (roles) === 'string' ? [roles] : roles }
         }
     },
     extraReducers: (builder => {
@@ -71,7 +73,9 @@ export const accountSlice = createSlice({
             router.navigate('/');
         })
         builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled), (state, action) => {
-            state.user = action.payload;
+            let claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+            let roles = claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+            state.user = { ...action.payload, roles: typeof (roles) === 'string' ? [roles] : roles }
         });
         //adMatcher - we use for our 2 async methods that return user
         builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
@@ -80,4 +84,4 @@ export const accountSlice = createSlice({
     })
 });
 
-export const {signOut, setUser} = accountSlice.actions; 
+export const { signOut, setUser } = accountSlice.actions; 
