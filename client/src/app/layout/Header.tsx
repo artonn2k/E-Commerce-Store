@@ -10,49 +10,49 @@ interface Props {
 }
 
 const midLinks = [
-    {title: 'catalog', path: '/catalog'},
-    {title: 'about', path: '/about'},
-    {title: 'contact', path: '/contact'}
+    { title: 'catalog', path: '/catalog' },
+    { title: 'about', path: '/about' },
+    { title: 'contact', path: '/contact' }
 
 ]
 
 const rightLinks = [
-    {title: 'login', path: '/login'},
-    {title: 'register', path: '/register'}
+    { title: 'login', path: '/login' },
+    { title: 'register', path: '/register' }
 ]
 
 const navStyles = {
     color: 'inherit',
-    textDecoration: 'none', 
+    textDecoration: 'none',
     typography: 'h6',
     '&:hover': {
         color: 'grey.500'
     },
-    '&.active':{
+    '&.active': {
         color: 'text.secondary'
     }
 }
 
-export default function Header({darkMode, handleThemeChange}: Props) {
-    const {basket} = useAppSelector(state => state.basket);
-    const {user} = useAppSelector(state => state.account);
+export default function Header({ darkMode, handleThemeChange }: Props) {
+    const { basket } = useAppSelector(state => state.basket);
+    const { user } = useAppSelector(state => state.account);
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <AppBar position="static">
-            <Toolbar sx={{display: 'flex', justifyContent: 'space-between', alignItems:'center'}}>
-                
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
                 <Box display='flex' alignItems='center'>
-                    <Typography variant="h6" component={NavLink} 
+                    <Typography variant="h6" component={NavLink}
                         to='/'
                         sx={navStyles}>
                         E-Commerce
                     </Typography>
-                    <Switch checked={darkMode} onChange={handleThemeChange}/>  
+                    <Switch checked={darkMode} onChange={handleThemeChange} />
                 </Box>
 
-                <List sx={{display: 'flex'}}>
-                    {midLinks.map(({title, path}) => (
+                <List sx={{ display: 'flex' }}>
+                    {midLinks.map(({ title, path }) => (
                         <ListItem
                             component={NavLink}
                             to={path}
@@ -62,10 +62,18 @@ export default function Header({darkMode, handleThemeChange}: Props) {
                             {title.toUpperCase()}
                         </ListItem>
                     ))}
+                    {user && user.roles?.includes('Admin') && 
+                    <ListItem
+                        component={NavLink}
+                        to={'/inventory'}
+                        sx={navStyles}
+                    >
+                        INVENTORY
+                    </ListItem>}
                 </List>
 
                 <Box display='flex' alignItems='center'>
-                    <IconButton component={Link} to='/basket' size="large" sx={{color: 'inherit'}}>
+                    <IconButton component={Link} to='/basket' size="large" sx={{ color: 'inherit' }}>
                         <Badge badgeContent={itemCount} color='secondary'>
                             <ShoppingCart />
                         </Badge>
@@ -74,8 +82,8 @@ export default function Header({darkMode, handleThemeChange}: Props) {
                     {user ? (
                         <SignedInMenu />
                     ) : (
-                        <List sx={{display: 'flex'}}>
-                            {rightLinks.map(({title, path}) => (
+                        <List sx={{ display: 'flex' }}>
+                            {rightLinks.map(({ title, path }) => (
                                 <ListItem
                                     component={NavLink}
                                     to={path}
@@ -85,8 +93,8 @@ export default function Header({darkMode, handleThemeChange}: Props) {
                                     {title.toUpperCase()}
                                 </ListItem>
                             ))}
-                        </List>    
-                    )}    
+                        </List>
+                    )}
 
                 </Box>
 

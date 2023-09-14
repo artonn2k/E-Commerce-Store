@@ -1,5 +1,6 @@
 import { Box, Typography, Pagination } from '@mui/material';
 import { MetaData } from '../models/pagination';
+import { useState } from 'react';
 
 interface Props {
     metaData: MetaData;
@@ -9,6 +10,12 @@ interface Props {
 
 function AppPagination({metaData, onPageChange} : Props) {
     const {currentPage, totalCount, totalPages, pageSize} = metaData;
+    const [pageNumber, setPageNumber] = useState(currentPage);
+
+    function handlePageChange(page: number){
+        setPageNumber(page);
+        onPageChange(page);
+    }
 
     return (
         <Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -21,8 +28,8 @@ function AppPagination({metaData, onPageChange} : Props) {
             color='secondary'
                 size='large'
                 count={totalPages}
-                page={currentPage}
-                onChange={(e, page) => onPageChange(page)}
+                page={pageNumber}
+                onChange={(e, page) => handlePageChange(page)}
             />
         </Box>
   )

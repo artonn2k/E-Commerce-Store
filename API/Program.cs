@@ -1,9 +1,12 @@
+using API.RequestHelpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -91,6 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<ImageService>();
 
 var app = builder.Build();
 
@@ -133,43 +137,3 @@ catch (Exception ex)
 }
 
 await app.RunAsync(); 
-
-
-// namespace API
-// {
-//     public class Program
-//     {
-//         public static async Task Main(string[] args)
-//         {
-//             var host = CreateHostBuilder(args).Build();
-//             using var scope = host.Services.CreateScope();
-//             var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
-//             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-//             var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-//             try
-//             {
-//                 await context.Database.MigrateAsync();
-//                 await DbInitializer.Initialize(context, userManager);
-//             }
-//             catch(Exception ex)
-//             {
-//                 logger.LogError(ex, "Problem migrating data");
-//             }
-//                 /*I have already used "using" above at the variable scope 
-//                 so I dont need to put finally*/
-//             // finally
-//             // {
-//             //     scope.Dispose();
-//             // }
-
-//             await host.RunAsync(); 
-//         }
-
-//         public static IHostBuilder CreateHostBuilder(string[] args) =>
-//             Host.CreateDefaultBuilder(args)
-//                 .ConfigureWebHostDefaults(webBuilder =>
-//                 {
-//                     webBuilder.UseStartup<Startup>();
-//                 });
-//     }
-// }
